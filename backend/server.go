@@ -2,17 +2,17 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 
-	// "io"
-	// "net/http"
+
+	"io"
+	"net/http"
 	"log"
 	"io/ioutil"
 
 	"sort"
 	"strings"
 
-	"sync"
+	// "sync"
 
 	"github.com/itchyny/timefmt-go"
 	"github.com/mmcdole/gofeed"
@@ -53,6 +53,7 @@ func replaceSingleNumber(str string) string {
 
 
 func dateConverter(fullDate string) time.Time {
+
 
 	if strings.Contains(fullDate, "-") && !containsDay(fullDate) {
 
@@ -144,11 +145,9 @@ func main() {
 
 	fp := gofeed.NewParser()
 
-	wg := &sync.WaitGroup{}
-	wg.Add(1)
 
 	c := cron.New()
-	c.AddFunc("@every 6s", func ()  {
+	c.AddFunc("@every 1m", func ()  {
 
 
 		var total []Feed
@@ -186,7 +185,6 @@ func main() {
 
 		j, _ := json.Marshal(total)
 
-		fmt.Print(string(j))
 
 		err := ioutil.WriteFile("feed.json", []byte(string(j)), 0644)
 		if err != nil {
@@ -197,24 +195,27 @@ func main() {
 	})
 
 
-	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-	// 	fmt.Print("Hello world!")
-	// 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	// 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 
-	// 	content ,err := ioutil.ReadFile("feed.json")
-	// 	if err != nil {
-	// 	log.Fatal(err)
-	// 	}
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "https://feed-roll.vercel.app/")
 
-	// 	io.WriteString(w, string(content))
-	// })
 
-	// log.Fatal(http.ListenAndServe(":8080", nil))
+		content ,err := ioutil.ReadFile("feed.json")
+		if err != nil {
+		log.Fatal(err)
+		}
+
+		io.WriteString(w, string(content))
+	})
+
 	c.Start()
-	wg.Wait()
+	log.Fatal(http.ListenAndServe(":8080", nil))
+
+
+
+
 
 
 }
