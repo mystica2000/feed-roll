@@ -147,7 +147,7 @@ func main() {
 
 
 	c := cron.New()
-	c.AddFunc("@every 1m", func ()  {
+	c.AddFunc("@every 23h", func ()  {
 
 
 		var total []Feed
@@ -197,9 +197,11 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
+		// w.Header().Set("Access-Control-Allow-Origin", "https://feed-roll.vercel.app")
 
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Header().Set("Access-Control-Allow-Origin", "https://feed-roll.vercel.app/")
+		(w).Header().Set("Access-Control-Allow-Origin", "*")
+    (w).Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+    (w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
 
 		content ,err := ioutil.ReadFile("feed.json")

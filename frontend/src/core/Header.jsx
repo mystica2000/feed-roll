@@ -12,6 +12,7 @@ function Header() {
   return (
     <div className="header">
         <h1>Feed Roll 📰</h1>
+        <p>RSS Feeds from Engineering Blogs at One Place! ✨</p>
         <Search />
     </div>
   );

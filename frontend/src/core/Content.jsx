@@ -26,7 +26,7 @@ function Content() {
       for (let i = 0; i < value.length; i++) {
         arr.push(
           <>
-            <a className="square" href={value[i].link}>{value[i].title}</a>
+            <a className="square" href={value[i].link} target="_blank">{value[i].title}</a>
             <span className="box">{value[i].name}</span>
           </>
         )

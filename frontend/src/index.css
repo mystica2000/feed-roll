@@ -98,7 +98,7 @@ body {
     background: transparent;
     backdrop-filter: blur(5px);
      padding: 4px;
-    font-weight: bold;
+
     opacity: 1;
     z-index: 1;
     padding-bottom: 15px;
