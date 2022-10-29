@@ -1,6 +1,6 @@
-# fly.toml file generated for cold-moon-9525 on 2022-10-28T21:49:00+05:30
+# fly.toml file generated for feed-roll-io on 2022-10-29T00:15:12+05:30
 
-app = "cold-moon-9525"
+app = "feed-roll-io"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []

@@ -93,8 +93,8 @@ body {
 
     width: 100%;
     text-align: center;
-    top: 0;
-    position: sticky;
+    top: 0px;
+    position: fixed;
     background: transparent;
     backdrop-filter: blur(5px);
      padding: 4px;
@@ -108,4 +108,13 @@ body {
   border: 1px solid black;
   padding: 10px;
   min-width: 250px;
+}
+
+.btn {
+  background-color: #e78686;
+  position: absolute;
+  right:10px;
+  bottom: 10px;
+  position: fixed;
+  z-index: 3
 }

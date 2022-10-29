@@ -1,25 +1,33 @@
-import { createEffect, createResource } from "solid-js";
+import { createEffect, createResource, createSelector, createSignal, onMount } from "solid-js";
 import store from "../store/store";
-
+import convertedDateFunc from "../helpers/sort"
+import ScrollToTop from "./ScrollToTop";
+import NoResults from "./NoResults";
 
 const SEARCH = 1;
+const DEFAULT = 2;
 
-const fetchPost = async () => (await fetch(`https://cold-moon-9525.fly.dev/`).then((response) => {
-  return response.json()
-}));
+const fetchPost = async () => { return (await fetch(`http://localhost:8080`)).json() };
 
 
 function Content() {
 
   const { search } = store
-
   const [posts] = createResource(fetchPost)
-
+  const [loading, setLoading] = createSignal(false);
   let postsMap = new Map();
   let postsMapInitial = new Map();
 
+  createEffect(() => {
+    if (posts()) {
+      fetchPosts();
+    }
+  })
+
+
   const populateMap = () => {
     let arr = []
+
     for (const [key, value] of postsMap.entries()) {
       arr.push(<p className="circle">{key}</p>)
 
@@ -33,45 +41,48 @@ function Content() {
       }
     }
 
-    return arr;
+    let arr1 = []
+    arr1.push(<div className="side">{arr}</div>)
+
+    return arr1;
   }
 
   const modifyStructure = (opt) => {
 
-    if (posts()) {
-
-      switch (opt) {
-        case SEARCH: {
-
-          postsMap = new Map(postsMapInitial)
-
-          let map = new Map();
-          postsMap.forEach((val, key) => {
-            for (let i = 0; i < val.length; i++) {
-              if (val[i].name.includes(search())) {
-                if (map.has(key)) {
-                  let temp = map.get(key);
-                  temp.push(val[i])
-                  map.set(key, temp)
-                } else {
-                  map.set(key, [val[i]])
-                }
+    switch (opt) {
+      case SEARCH: {
+        postsMap = new Map(postsMapInitial)
+        let map = new Map();
+        postsMap.forEach((val, key) => {
+          for (let i = 0; i < val.length; i++) {
+            if (val[i].name.includes(search())) {
+              if (map.has(key)) {
+                let temp = map.get(key);
+                temp.push(val[i])
+                map.set(key, temp)
+              } else {
+                map.set(key, [val[i]])
               }
             }
-          })
-          postsMap = new Map(map)
-
-          if(postsMap.size>0) {
-            return populateMap();
-          } else {
-            return <div>No results Found</div>
           }
+        })
+        postsMap = new Map(map)
 
-        }
-        default: {
-          fetchPosts();
+        if (postsMap.size > 0) {
           return populateMap();
+        } else {
+          return <NoResults />
         }
+      }
+      case DEFAULT: {
+
+
+        if (loading()) {
+          postsMap = new Map(postsMapInitial)
+        } else {
+          fetchPosts()
+        }
+        return populateMap();
       }
     }
   }
@@ -81,40 +92,43 @@ function Content() {
 
   const fetchPosts = () => {
 
-    postsMapInitial = new Map();
-    postsMap = new Map()
-    for (let i = 0; i < posts().length; i++) {
+    if (typeof(posts())=='object') {
 
-      let convertedDate = new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric" }).format(new Date(posts()[i].publishedDate))
+      postsMapInitial = new Map();
+      postsMap = new Map()
+      for (let i = 0; i < posts().length; i++) {
+        let convertedDate = new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric" }).format(new Date(posts()[i].publishedDate))
 
-      if (postsMap.has(convertedDate)) {
-        let temp = postsMap.get(convertedDate);
-        temp.push(posts()[i])
-        postsMap.set(convertedDate, temp)
-      } else {
-        postsMap.set(convertedDate, [posts()[i]])
+        if (postsMap.has(convertedDate)) {
+          let temp = postsMap.get(convertedDate);
+          temp.push(posts()[i])
+          postsMap.set(convertedDate, temp)
+        } else {
+          postsMap.set(convertedDate, [posts()[i]])
+        }
       }
-    }
+      postsMap = new Map(convertedDateFunc(postsMap))
+      postsMapInitial = new Map(postsMap);
 
-    postsMapInitial = new Map(postsMap);
+      setLoading(true);
+    } else {
+
+    }
   }
 
   return (
     <>
-      <div >
-        <div className="side">
+      <main style={"min-height:73vh;margin-top:200px;"}>
+        <ScrollToTop />
 
-        <Suspense fallback={<h1>Loading...</h1>}>
-          <Show
-            when={search().length > 0}
-            fallback={modifyStructure()}
-          >
+        <ErrorBoundary fallback={<h1>Something went wrong! Try again later...</h1>}>
+          { posts.loading && <h1>Loading...</h1>}
+          <Show when={search().length > 0} fallback={modifyStructure(DEFAULT)}>
             {modifyStructure(SEARCH)}
           </Show>
-        </Suspense>
+        </ErrorBoundary>
 
-        </div>
-      </div>
+      </main>
     </>
   );
 }
