@@ -7,7 +7,9 @@ import NoResults from "./NoResults";
 const SEARCH = 1;
 const DEFAULT = 2;
 
+
 const fetchPost = async () => { return (await fetch(`https://feed-roll-io.fly.dev/`)).json() };
+
 
 
 function Content() {
