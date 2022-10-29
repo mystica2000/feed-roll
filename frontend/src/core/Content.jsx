@@ -4,7 +4,7 @@ import store from "../store/store";
 
 const SEARCH = 1;
 
-const fetchPost = async () => (await fetch(`https://cold-moon-9525.fly.dev/`).then((response) => {
+const fetchPost = async () => (await fetch(`https://feed-roll-io.fly.dev/`).then((response) => {
   return response.json()
 }));
 
