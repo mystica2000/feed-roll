@@ -10,11 +10,11 @@ function Search() {
 function Header() {
 
   return (
-    <div className="header">
+    <header className="header">
         <h1>Feed Roll 📰</h1>
         <p>RSS Feeds from Engineering Blogs at One Place! ✨</p>
         <Search />
-    </div>
+    </header>
   );
 }
 
