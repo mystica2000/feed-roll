@@ -10,7 +10,9 @@ const SEARCH = 1;
 const DEFAULT = 2;
 
 
+
 const fetchPost = async () => { return (await fetch(apiURL())).json() };
+
 
 function Content() {
 
