@@ -40,6 +40,25 @@ func cronJob(wg *sync.WaitGroup) {
 	urls["linkedin"] = "https://engineering.linkedin.com/blog.rss.html"
 	urls["netflix"] = "https://netflixtechblog.com/feed"
 	urls["spotify"] = "https://engineering.atspotify.com/feed/"
+	urls["aws"] = "https://aws.amazon.com/blogs/aws/feed/"
+	urls["atlassian"] = "https://blog.developer.atlassian.com/feed/"
+	urls["canva"] = "https://canvatechblog.com/feed"
+	urls["auth0"] = "https://auth0.com/blog/rss.xml"
+	urls["postman"] = "https://medium.com/feed/better-practices"
+	urls["squarespace"] = "https://engineering.squarespace.com/blog?format=rss"
+	urls["target"] = "https://tech.target.com/rss/feed.xml"
+	urls["edge"] = "https://blogs.windows.com/msedgedev/feed/"
+	urls["swiggy"] = "https://bytes.swiggy.com/feed"
+	urls["nytimes"] = "https://open.nytimes.com/feed"
+	urls["linkedin"] = "https://engineering.linkedin.com/blog.rss.html"
+	urls["hashnode"] = "https://engineering.hashnode.com/rss.xml"
+	urls["eventbrite"] = "https://www.eventbrite.com/engineering/feed/"
+	urls["hasura"] = "https://hasura.io/blog/rss"
+	urls["discord"] = "https://discord.com/blog/rss.xml"
+	urls["docker"] = "https://www.docker.com/feed/"
+	urls["cloudflare"] = "https://blog.cloudflare.com/rss/"
+	urls["canva"] = "https://canvatechblog.com/feed"
+
 
 	c := cron.New()
 	c.AddFunc("0 0 * * *", func() {
@@ -69,7 +88,7 @@ func cronJob(wg *sync.WaitGroup) {
 			}
 		}
 		j, _ := json.Marshal(total)
-		fmt.Println("Hello world!!")
+
 		mutex.Lock()
 		err := ioutil.WriteFile("feed.json", []byte(string(j)), 0644)
 		if err != nil {
@@ -83,10 +102,7 @@ func cronJob(wg *sync.WaitGroup) {
 
 func startHTTPServer(wg *sync.WaitGroup) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-		fmt.Print("working??")
-		//https://feed-roll.vercel.app
-		(w).Header().Set("Access-Control-Allow-Origin", "*")
+		(w).Header().Set("Access-Control-Allow-Origin", "https://feed-roll.vercel.app")
 		(w).Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
@@ -109,7 +125,7 @@ func startHTTPServer(wg *sync.WaitGroup) {
 				}
 			default:
 				{
-					fmt.Println("Hello ",err)
+					fmt.Println("Error ",err)
 				}
 			}
 		}
