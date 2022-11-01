@@ -1,15 +1,17 @@
-import { createEffect, createResource, createSelector, createSignal, onMount } from "solid-js";
+import { createEffect, createResource, createSignal } from "solid-js";
 import store from "../store/store";
 import convertedDateFunc from "../helpers/sort"
 import ScrollToTop from "./ScrollToTop";
 import NoResults from "./NoResults";
+import Row from "./Row";
+import { apiURL } from '../helpers/env'
 
 const SEARCH = 1;
 const DEFAULT = 2;
 
 
-const fetchPost = async () => { return (await fetch(`https://feed-roll-io.fly.dev/`)).json() };
 
+const fetchPost = async () => { return (await fetch(apiURL())).json() };
 
 
 function Content() {
@@ -28,25 +30,17 @@ function Content() {
 
 
   const populateMap = () => {
-    let arr = []
 
-    for (const [key, value] of postsMap.entries()) {
-      arr.push(<p className="circle">{key}</p>)
+    let keys = [...postsMap.keys()]
+    let values = [...postsMap.values()]
 
-      for (let i = 0; i < value.length; i++) {
-        arr.push(
-          <>
-            <a className="square" href={value[i].link} target="_blank">{value[i].title}</a>
-            <span className="box">{value[i].name}</span>
-          </>
-        )
-      }
-    }
-
-    let arr1 = []
-    arr1.push(<div className="side">{arr}</div>)
-
-    return arr1;
+    return (
+      <div className="side">
+      <For each={keys}>{(key, i) =>
+        <Row key={key} values={values[i()]} />
+      }</For>
+      </div>
+    )
   }
 
   const modifyStructure = (opt) => {
@@ -77,8 +71,6 @@ function Content() {
         }
       }
       case DEFAULT: {
-
-
         if (loading()) {
           postsMap = new Map(postsMapInitial)
         } else {
@@ -96,9 +88,11 @@ function Content() {
 
     if (typeof(posts())=='object') {
 
+
       postsMapInitial = new Map();
       postsMap = new Map()
       for (let i = 0; i < posts().length; i++) {
+
         let convertedDate = new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric" }).format(new Date(posts()[i].publishedDate))
 
         if (postsMap.has(convertedDate)) {
@@ -113,8 +107,6 @@ function Content() {
       postsMapInitial = new Map(postsMap);
 
       setLoading(true);
-    } else {
-
     }
   }
 
@@ -122,14 +114,12 @@ function Content() {
     <>
       <main style={"min-height:73vh;margin-top:200px;"}>
         <ScrollToTop />
-
         <ErrorBoundary fallback={<h1>Something went wrong! Try again later...</h1>}>
           { posts.loading && <h1>Loading...</h1>}
           <Show when={search().length > 0} fallback={modifyStructure(DEFAULT)}>
             {modifyStructure(SEARCH)}
           </Show>
         </ErrorBoundary>
-
       </main>
     </>
   );
