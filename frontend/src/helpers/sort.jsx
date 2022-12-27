@@ -15,31 +15,27 @@ const months = {
 
 export default function convertedDateFunc(postData) {
 
-  var ad = new Date(), bd = new Date();
   let arr = [...postData.keys()];
+  let dateArray = []
+  let dateMap = new Map();
 
+  arr.forEach((aDate)=> {
+    dateArray.push(new Date(aDate));
+    dateMap.set(new Date(aDate).toString(),aDate);
+  })
 
-   arr.sort(function (a,b) {
-    let aDate = a.split(" ")
-    let bDate = b.split(" ")
-
-    ad.setDate(aDate[1].substr(0,aDate.length-1))
-    ad.setMonth(months[aDate[0]])
-    ad.setFullYear(aDate[2])
-
-    bd.setDate(bDate[1].substr(0,bDate.length-1))
-    bd.setMonth(months[bDate[0]])
-    bd.setFullYear(bDate[2])
-
-    return bd - ad;
+   dateArray.sort(function (a,b) {
+    return b - a;
    })
 
 
    let ret = new Map()
-   for(let i=0;i<arr.length;i++) {
+   for(let i=0;i<dateArray.length;i++) {
 
-    let value = postData.get(arr[i]);
-    ret.set(arr[i],value);
+    let mapIndex = dateArray[i];
+    let realIndex = dateMap.get(mapIndex.toString());
+    let value = postData.get(realIndex);
+    ret.set(realIndex,value);
 
    }
 

@@ -94,9 +94,10 @@ function Content() {
       for (let i = 0; i < posts().length; i++) {
 
         let convertedDate = new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric" }).format(new Date(posts()[i].publishedDate))
-
+        posts()[i].publishedDate = convertedDate;
         if (postsMap.has(convertedDate)) {
           let temp = postsMap.get(convertedDate);
+
           temp.push(posts()[i])
           postsMap.set(convertedDate, temp)
         } else {
