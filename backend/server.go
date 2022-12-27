@@ -102,7 +102,10 @@ func cronJob(wg *sync.WaitGroup) {
 
 func startHTTPServer(wg *sync.WaitGroup) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		(w).Header().Set("Access-Control-Allow-Origin", "https://feed-roll.vercel.app")
+
+		// corsList := []string{"http://localhost:8080","https://feed-roll.vercel.app"}
+
+		(w).Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:3000")
 		(w).Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
