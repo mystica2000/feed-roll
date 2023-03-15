@@ -50,26 +50,24 @@ func cronJob(wg *sync.WaitGroup) {
 	urls["edge"] = "https://blogs.windows.com/msedgedev/feed/"
 	urls["swiggy"] = "https://bytes.swiggy.com/feed"
 	urls["nytimes"] = "https://open.nytimes.com/feed"
-	urls["linkedin"] = "https://engineering.linkedin.com/blog.rss.html"
 	urls["hashnode"] = "https://engineering.hashnode.com/rss.xml"
 	urls["eventbrite"] = "https://www.eventbrite.com/engineering/feed/"
 	urls["hasura"] = "https://hasura.io/blog/rss"
 	urls["discord"] = "https://discord.com/blog/rss.xml"
 	urls["docker"] = "https://www.docker.com/feed/"
 	urls["cloudflare"] = "https://blog.cloudflare.com/rss/"
-	urls["canva"] = "https://canvatechblog.com/feed"
-
 
 	c := cron.New()
 	c.AddFunc("0 0 * * *", func() {
-
+		fmt.Println("CRON STARTED :")
 		var total []Feed
 		temp := make(map[string]struct{})
 
 		for url := range urls {
 			feed, err := fp.ParseURL(urls[url])
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error Parsing the URL ", url, " - Error -", err)
+				continue
 			}
 
 			items := feed.Items
@@ -90,11 +88,12 @@ func cronJob(wg *sync.WaitGroup) {
 		j, _ := json.Marshal(total)
 
 		mutex.Lock()
-		err := ioutil.WriteFile("feed.json", []byte(string(j)), 0644)
-		if err != nil {
-			log.Fatal(err)
-		}
+		err := ioutil.WriteFile("feed.json", []byte(j), 0644)
 		mutex.Unlock()
+
+		if err != nil {
+			fmt.Print("error writing to a file - ", err)
+		}
 	})
 
 	c.Start()
@@ -111,6 +110,7 @@ func startHTTPServer(wg *sync.WaitGroup) {
 
 		mutex.Lock()
 		content, err := ioutil.ReadFile("feed.json")
+		mutex.Unlock()
 
 		if err != nil {
 			switch err {
@@ -126,13 +126,11 @@ func startHTTPServer(wg *sync.WaitGroup) {
 				{
 					io.WriteString(w, "Not found file")
 				}
-			default:
-				{
-					fmt.Println("Error ",err)
-				}
 			}
+
+			fmt.Println("Error ", err)
+			return
 		}
-		mutex.Unlock()
 
 		if len(content) > 1 {
 			io.WriteString(w, string(content))
