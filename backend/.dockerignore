@@ -1,0 +1,5 @@
+# flyctl launch added from .gitignore
+**\rss-reader.exe
+**\go.sum
+**\fly.toml
+**\feed.json
