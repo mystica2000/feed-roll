@@ -103,8 +103,7 @@ func startHTTPServer(wg *sync.WaitGroup) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		// corsList := []string{"http://localhost:8080","https://feed-roll.vercel.app"}
-
-		(w).Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:3000")
+		(w).Header().Set("Access-Control-Allow-Origin", "*")
 		(w).Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 		(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
@@ -131,7 +130,6 @@ func startHTTPServer(wg *sync.WaitGroup) {
 			fmt.Println("Error ", err)
 			return
 		}
-
 		if len(content) > 1 {
 			io.WriteString(w, string(content))
 		} else {
