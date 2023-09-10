@@ -46,8 +46,8 @@ body {
   content: '';
 
   top: 0px;
-    border: 8px solid black;
-    left: -33px;
+  border: 8px solid black;
+  left: -33px;
 
 }
 
@@ -60,15 +60,15 @@ body {
 
 
 .square::before {
-    width: 5px;
-    height: 5px;
-    background-color: #e78686;
-    position: absolute;
-    content: '';
-    top: 0px;
-    border: 8px solid black;
-    left: -31px;
-    border-radius: 10px;
+  width: 5px;
+  height: 5px;
+  background-color: #e78686;
+  position: absolute;
+  content: '';
+  top: 0px;
+  border: 8px solid black;
+  left: -31px;
+  border-radius: 10px;
 }
 
 
@@ -76,32 +76,32 @@ body {
   position: relative;
 
   display: block;
-    color: white;
+  color: white;
 
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .box {
   margin: 6px;
-    border: 1px solid grey;
-    padding: 5px;
-    display: inline-block;
+  border: 1px solid grey;
+  padding: 5px;
+  display: inline-block;
 }
 
 
 .header {
 
-    width: 100%;
-    text-align: center;
-    top: 0px;
-    position: fixed;
-    background: transparent;
-    backdrop-filter: blur(5px);
-     padding: 4px;
+  width: 100%;
+  text-align: center;
+  top: 0px;
+  position: fixed;
+  background: transparent;
+  backdrop-filter: blur(5px);
+  padding: 4px;
 
-    opacity: 1;
-    z-index: 1;
-    padding-bottom: 15px;
+  opacity: 1;
+  z-index: 1;
+  padding-bottom: 15px;
 }
 
 .search {
@@ -113,8 +113,66 @@ body {
 .btn {
   background-color: #e78686;
   position: absolute;
-  right:10px;
+  right: 10px;
   bottom: 10px;
   position: fixed;
   z-index: 3
+}
+
+/* credits for loader: https://codepen.io/kingfisher13/pen/vKXwNN */
+.loader {
+  width: 60px;
+}
+
+.loader-wheel {
+  animation: spin 1s infinite linear;
+  border: 2px solid rgba(30, 30, 30, 0.5);
+  border-left: 4px solid #fff;
+  border-radius: 50%;
+  height: 50px;
+  margin-bottom: 10px;
+  width: 50px;
+}
+
+.loader-text {
+  color: #fff;
+  font-family: arial, sans-serif;
+}
+
+.loader-text:after {
+  content: 'Loading';
+  animation: load 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load {
+  0% {
+    content: 'Loading';
+  }
+
+  33% {
+    content: 'Loading.';
+  }
+
+  67% {
+    content: 'Loading..';
+  }
+
+  100% {
+    content: 'Loading...';
+  }
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
 }
